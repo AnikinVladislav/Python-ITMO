@@ -8,15 +8,15 @@ with open('Export.csv', 'r') as f:
         # print(data_row)
         # data_row[8] - City; data_row[10] - State; data_row[11] - zip_data
         farmers[data_row[0]] = data_row[1:]
-print(farmers)
-
+# print(farmers)
+print(farmers['1019863'][9])
 city = input('Введите город:')
 state = input('Введите штат:')
 frm_interests = []
 for fmid in farmers:
     market = farmers[fmid]
     market_porj = [market[0], market[7], market[9], market[10], market[19], market[20]]
-    if market_porj[1] == city.capitalize() and market_porj[2] == state.capitalize():
+    if market_porj[1] == city and market_porj[2] == state:
         frm_interests.append(fmid)
 
 want_review = input('Хотите оставить рецензию на эти рынки (Да\Нет):')
