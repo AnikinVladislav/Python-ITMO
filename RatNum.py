@@ -6,29 +6,18 @@ II ADT
     negative, add, sub, mul, div, simplify, gcd, __str__, __hash__, __eq__
     Spec: 
     is nan return True if num == 'NaN' or den == 'NaN'
-
     is_negative return True if num / den < 0
-
     is_positive return True if num / den >= 0
-
     compare_to return True if num1 == num2 and den1 == den2  
-
     float_value return num/den as float data type
-
     int_value return num/den as int data type (rounds to a smaller)
-
     negative return -(num/den)
-
     add return ((num1*den2) + (num2*den1)) / (den1*den2)
-
     mul return (num1*num2) / (den1*den2)
     
     div return (num1*den2) / (den1*num2)
-
     simplify makes fraction reduction to better representation
-
     gcd return greatest common divisor
-
 """
 
 
@@ -118,7 +107,10 @@ class RatNum:
     
 
     def negative(self):
-        return RatNum(-self.num, self.den)
+        if self.is_negative():
+            return RatNum(abs(self.num), abs(self.den))
+        else:
+            return RatNum(-self.num, self.den)
     
 
     def add(self,other):
@@ -145,8 +137,12 @@ class RatNum:
 
 
     def div(self, other):
-        new_other = RatNum(other.den, other.num)
-        ans = self.mul(new_other)
+        if type(other) != RatNum:
+            other_new = RatNum(other)
+        else:
+            other_new = other
+        other_temp = RatNum(other_new.den, other_new.num)
+        ans = self.mul(other_temp)
         return RatNum(ans.num, ans.den)
 
 
@@ -162,13 +158,22 @@ class RatNum:
 
 
     def __eq__(self, other):
-        if self.is_nan() or other.is_nan():
-            return self.is_nan() and other.is_nan()
+        if type(other) != RatNum:
+            other_new = RatNum(other)
         else:
-            if self.den == 0 or other.den == 0:
+            other_new = other
+        if self.is_nan() or other_new.is_nan():
+            return self.is_nan() and other_new.is_nan()
+        else:
+            if self.den == 0 or other_new.den == 0:
                 return False
             else:
-                return (abs(self.num) == abs(other.num)) and (abs(self.den) == abs(other.den))
+                if other_new.is_negative() and self.is_negative():
+                    return (abs(self.num) == abs(other_new.num)) and (abs(self.den) == abs(other_new.den))
+                elif (other_new.is_negative() and not self.is_negative()) or (self.is_negative() and not other_new.is_negative()):
+                    return False
+                else:
+                    return (self.num == other_new.num) and (self.den == other_new.den)
 
 
     def __str__(self):
@@ -252,3 +257,4 @@ if __name__ == '__main__':
         print('gcd test passed!')
     else:
         print('gcd test failed!')
+
