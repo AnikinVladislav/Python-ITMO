@@ -23,6 +23,10 @@ II ADT
 
 class RatNum:
     def __init__(self, numerator, denominator = 1):
+        if (type(numerator) != int) or (type(denominator) != int):
+            if not((numerator == "NaN") or (denominator == "NaN")):
+                raise TypeError('parametrs must be int')
+            
         self.num = numerator
         self.den = denominator
 
@@ -177,7 +181,10 @@ class RatNum:
 
 
     def __str__(self):
-        return '({0} / {1})'.format(self.num, self.den)
+        if self.num == 0 or self.den == 1:
+            return '({0})'.format(self.num)
+        else:
+            return '({0} / {1})'.format(self.num, self.den)
 
 
 
