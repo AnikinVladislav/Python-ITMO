@@ -172,12 +172,14 @@ class RatNum:
             if self.den == 0 or other_new.den == 0:
                 return False
             else:
+                simpl_self = self.simplify()
+                simpl_other = other_new.simplify()
                 if other_new.is_negative() and self.is_negative():
-                    return (abs(self.num) == abs(other_new.num)) and (abs(self.den) == abs(other_new.den))
-                elif (other_new.is_negative() and not self.is_negative()) or (self.is_negative() and not other_new.is_negative()):
+                    return (abs(simpl_self.num) == abs(simpl_other.num)) and (abs(simpl_self.den) == abs(simpl_other.den))
+                elif (simpl_other.is_negative() and not simpl_self.is_negative()) or (simpl_self.is_negative() and not simpl_other.is_negative()):
                     return False
                 else:
-                    return (self.num == other_new.num) and (self.den == other_new.den)
+                    return (simpl_self.num == simpl_other.num) and (simpl_self.den == simpl_other.den)
 
 
     def __str__(self):
@@ -265,3 +267,12 @@ if __name__ == '__main__':
     else:
         print('gcd test failed!')
 
+    z = RatNum(0)
+    n1 = RatNum(5, 0)
+    n2 = RatNum(5, 2)
+    n3 = RatNum(6, 3)
+    n4 = n3.add(n2)
+    n5 = RatNum(18, 9)
+    print(z.add(n2))
+    print(n4)
+    print(n3 == n5)
