@@ -224,7 +224,7 @@ if __name__ == '__main__':
     else:
         print('sub test failed!') 
 
-    if p9.eval(2.0) == 119.0:
+    if p9.eval(2.0) == 119.0 and p9.eval(0.0) == 2.0:
         print('eval test passed!')
     else:
         print('eval test failed!')    
