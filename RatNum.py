@@ -197,6 +197,10 @@ class RatNum:
             return '({0} / {1})'.format(self.num, self.den)
 
 
+    def __hash__(self):
+        return hash(self.num, self.den)
+
+
 if __name__ == '__main__':
     ratnum1 = RatNum(4,6)
     ratnum2 = RatNum(2,3)

@@ -27,7 +27,7 @@ II ADT
 
     differentiate retruns diff poly by poly.simb
 
-    integrate 
+    integrate retruns integral poly by poly.simb
 
 
 
@@ -144,6 +144,14 @@ class RatPoly:
         return RatPoly(temp_list, self.symb)
 
 
+    def integrate(self):
+        temp_list = []
+        for i in range(len(self.k)):
+            temp_list.append(self.k[i].div((len(self.k)-i)).simplify())
+        temp_list.append(1)
+        return RatPoly(temp_list, self.symb)
+
+
 
     def __str__(self):
         poly_str = "["
@@ -183,6 +191,10 @@ class RatPoly:
         return True
 
 
+    def __hash__(self):
+        return hash(self.k, self.symb)
+
+
 if __name__ == '__main__':
     p1 = RatPoly([1, -2, RatNum.RatNum(3,6), -4], "x")
     print(p1)
@@ -219,13 +231,13 @@ if __name__ == '__main__':
     else:
         print('scale_coeff test failed!')    
 
-    p8 =RatPoly([-2, -6, RatNum.RatNum(8,3), -5, -6], "x")
+    p8 = RatPoly([-2, -6, RatNum.RatNum(8,3), -5, -6], "x")
     if p6.negate() == p8:
         print('negate test passed!')
     else:
         print('negate test failed!') 
 
-    p9 =RatPoly([1, 0, RatNum.RatNum(-17,6), RatNum.RatNum(11,3), RatNum.RatNum(4,3), RatNum.RatNum(1,3), RatNum.RatNum(9,2), 2], "x")
+    p9 = RatPoly([1, 0, RatNum.RatNum(-17,6), RatNum.RatNum(11,3), RatNum.RatNum(4,3), RatNum.RatNum(1,3), RatNum.RatNum(9,2), 2], "x")
     if p3.mul(p4) == p9:
         print('mul test passed!')
     else:
@@ -241,8 +253,17 @@ if __name__ == '__main__':
     else:
         print('eval test failed!')    
 
-    p10 =RatPoly([7, 0, RatNum.RatNum(-85,6), RatNum.RatNum(44,3), 4, RatNum.RatNum(2,3), RatNum.RatNum(9,2)], "x")
+    p10 = RatPoly([7, 0, RatNum.RatNum(-85,6), RatNum.RatNum(44,3), 4, RatNum.RatNum(2,3), RatNum.RatNum(9,2)], "x")
     if (p9.differentiate() == p10):
         print('differentiate test passed!')
     else:
         print('differentiate test failed!')    
+
+    p11 = RatPoly([RatNum.RatNum(1, 8), 0, RatNum.RatNum(-17,36), RatNum.RatNum(11,15), RatNum.RatNum(1,3), RatNum.RatNum(1,9), RatNum.RatNum(9,4), 2, 1], "x")
+    if p9.integrate() == p11:
+        print('integrate test passed!')
+    else:
+        print('integrate test failed!')  
+
+
+
