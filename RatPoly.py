@@ -25,6 +25,9 @@ II ADT
 
     eval(k) retruns float which rerpresents value of equation: poly(x) where x = f
 
+    differentiate retruns diff poly by poly.simb
+
+    integrate 
 
 
 
@@ -133,6 +136,15 @@ class RatPoly:
         else: 
             raise TypeError('k must be float')
 
+
+    def differentiate(self):
+        temp_list = []
+        for i in range(len(self.k)-1):
+            temp_list.append(self.k[i].mul((len(self.k)-i-1)).simplify())
+        return RatPoly(temp_list, self.symb)
+
+
+
     def __str__(self):
         poly_str = "["
         temp = 1
@@ -228,3 +240,9 @@ if __name__ == '__main__':
         print('eval test passed!')
     else:
         print('eval test failed!')    
+
+    p10 =RatPoly([7, 0, RatNum.RatNum(-85,6), RatNum.RatNum(44,3), 4, RatNum.RatNum(2,3), RatNum.RatNum(9,2)], "x")
+    if (p9.differentiate() == p10):
+        print('differentiate test passed!')
+    else:
+        print('differentiate test failed!')    
