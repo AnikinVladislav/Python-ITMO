@@ -118,26 +118,34 @@ class RatNum:
     
 
     def add(self,other):
-        if self.den == 0 or other.den == 0:
-            if self.den == 0:
-                return RatNum(self.num, self.den)
-            else: 
-                return RatNum(other.num, other.den)
-        elif self.is_nan() or other.is_nan():
-            return RatNum('NaN', 'NaN')
+        if type(other) == int:
+             return RatNum((self.num + other), self.den)
         else:
-            if self.den == other.den:
-                return RatNum((self.num + other.num), self.den)
+            if self.den == 0 or other.den == 0:
+                if self.den == 0:
+                    return RatNum(self.num, self.den)
+                else: 
+                    return RatNum(other.num, other.den)
+            elif self.is_nan() or other.is_nan():
+                return RatNum('NaN', 'NaN')
             else:
-                return RatNum(((self.num*other.den) + (other.num*self.den)),  (self.den*other.den))
+                if self.den == other.den:
+                    return RatNum((self.num + other.num), self.den)
+                else:
+                    return RatNum(((self.num*other.den) + (other.num*self.den)),  (self.den*other.den))
 
 
 
     def mul(self, other):
-        if self.is_nan() or other.is_nan():
-            return RatNum('NaN', 'NaN')
-        else:
-            return RatNum((self.num*other.num) ,  (self.den*other.den))
+            if type(other) == int:
+                return RatNum((self.num*other) ,  (self.den))
+            elif type(other) == RatNum:
+                if self.is_nan() or other.is_nan():
+                    return RatNum('NaN', 'NaN')
+                else:
+                    return RatNum((self.num*other.num) ,  (self.den*other.den))
+            else: 
+                raise ValueError('other val must be int or RatNum')
 
 
     def div(self, other):
@@ -187,7 +195,6 @@ class RatNum:
             return '({0})'.format(self.num)
         else:
             return '({0} / {1})'.format(self.num, self.den)
-
 
 
 if __name__ == '__main__':
