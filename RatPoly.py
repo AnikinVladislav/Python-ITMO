@@ -23,7 +23,11 @@ II ADT
     
     mul returns poly1*poly2 : [poly1_coef[i]*poly2_coef[j]] where i = 1...n, j = 1 ... k
 
+    div returns poly1/const : [poly1_coef[i]/const] where i = 1...n, j = 1 ... k
+
     eval(k) retruns float which rerpresents value of equation: poly(x) where x = f
+
+    value_of(string) retruns Ratpoly from string, working only with int coef!!!
 
     differentiate retruns diff poly by poly.simb
 
@@ -112,6 +116,16 @@ class RatPoly:
             return RatPoly(temp_list, self.symb)
         else:
             raise TypeError('other val must be int or RatPoly or RatNum')
+
+
+    def div(self, other):
+        if type(other) == RatNum.RatNum or type(other) == int:
+            temp_list = []
+            for i in range(len(self.k)):
+                temp_list.append(self.k[i].div(other).simplify())
+            return RatPoly(temp_list, self.symb)
+        else:
+            raise TypeError('other val must be int or RatNum')
         
 
     def sub(self, other):
@@ -152,6 +166,104 @@ class RatPoly:
         return RatPoly(temp_list, self.symb)
 
 
+    def value_of(exmpl):
+        
+        def ckeckList(lst): 
+            ele = lst[0]
+            chk = True
+            # Comparing each element with first item
+            for item in lst:
+                if ele != item:
+                    chk = False
+                    break
+            return chk
+
+        exmpl_list = list(exmpl)
+        expml_list_v2 = []
+        indx = -2
+        temp = ""
+        buf = ""
+        for i in range(len(exmpl_list)):
+            try:
+                a = int(exmpl_list[i])
+            except ValueError:
+                # exmpl_list[i] = symbol
+                buf = exmpl_list[i]
+                if temp != "":
+                    expml_list_v2.append(temp)
+                    temp = ""
+                expml_list_v2.append(exmpl_list[i])
+            else:
+                # exmpl_list[i] = int
+                if buf == "-" and temp == "":
+                    temp += buf
+                    if i < 2:
+                        del expml_list_v2[-1]
+                    else:
+                        if expml_list_v2[-2] != "^":
+                            expml_list_v2[-1] = "+"
+                        else:
+                            del expml_list_v2[-1]
+                temp += exmpl_list[i]
+                if i == len(exmpl_list)-1:
+                    expml_list_v2.append(temp)
+                            
+        expml_list_v3 = []
+        for elem in expml_list_v2:
+            try:
+                a = int(elem)
+            except ValueError:
+                # elem = symbol
+                expml_list_v3.append(elem)
+            else:
+                # elem = int
+                expml_list_v3.append(int(elem))
+
+
+        sym = ""
+        list_sym = expml_list_v3
+        list_sym_v2 = []
+        for i in range(len(list_sym)):
+            if list_sym[i] not in ["+","-","*","^"] and type(list_sym[i]) != int:
+                list_sym_v2.append(list_sym[i]) 
+        if not ckeckList(list_sym_v2):
+            raise ValueError("In poly myst be only one symb variable")
+        else:
+            sym = list_sym_v2[0]
+            
+        powers = []
+            
+        for i in range(len(list_sym)):
+            if i > 1:
+                if list_sym[i-1] == "^":
+                    powers.append(list_sym[i])
+
+        list_for_poly = []
+        for i in range(max(powers)+1):
+            list_for_poly.append(0)
+
+        for i in range(len(list_sym)):
+            if list_sym[i] == sym:
+                if i == 0:
+                    if list_sym[i+1] == "^":
+                        list_for_poly[-list_sym[i+2]-1] = 1
+                    else:
+                        list_for_poly[-2] = 1
+                else:
+                    if list_sym[i-1] == "*":
+                        if list_sym[i+1] == "^":
+                            list_for_poly[-list_sym[i+2]-1] = list_sym[i-2]
+                        else:
+                            list_for_poly[-2] = list_sym[i-2]
+            else:
+                if i < len(list_sym)-1 and i != 0:
+                    if type(list_sym[i]) == int and list_sym[i+1] != "*" and list_sym[i-1] != "^":
+                        list_for_poly[-1] = list_sym[i]
+                else:
+                    if type(list_sym[i]) == int:
+                        list_for_poly[-1] = list_sym[i]
+        return RatPoly(list_for_poly, sym)
+                        
 
     def __str__(self):
         poly_str = "["
@@ -264,6 +376,20 @@ if __name__ == '__main__':
         print('integrate test passed!')
     else:
         print('integrate test failed!')  
+
+    p12 = RatPoly([-23, -2345, 0, -1234], "x")
+    if (RatPoly.value_of("-23*x^3-2345*x^2-1234") == p12):
+        print('value_of test passed!')
+    else:
+        print('value_of test failed!')  
+
+    p13 = RatPoly([99, 66, 33, 11], "y")
+    p14 = RatPoly([9, 6, 3, 1], "y")
+    if (p13.div(11) == p14):
+        print('div test passed!')
+    else:
+        print('div test failed!') 
+
 
 
 
