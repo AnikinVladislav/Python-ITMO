@@ -90,6 +90,40 @@ class FarmerMarket():
 {self.PetFood } , {self.Tofu } , {self.WildHarvested } , {self.updateTime })'
 
 
+    def main_info(self):
+        return f'({self.FMID } , {self.MarketName } , {self.city } , {self.County } , {self.State } , {self.zip } , {self.x } , {self.y })'
+
+
+
+def srchBycityandstate(fermers_list: FarmerMarket, city, state):
+    temp_list = []
+    for i in range(len(fermers_list)):
+        if fermers_list[i].city == city and fermers_list[i].State == state:
+            temp_list.append(fermers_list[i])
+    return temp_list
+
+
+def srchByZip(fermers_list: FarmerMarket, zip):
+    temp_list = []
+    for i in range(len(fermers_list)):
+        if fermers_list[i].zip == zip:
+            temp_list.append(fermers_list[i])
+    return temp_list
+
+
+def srchByArea(fermers_list: FarmerMarket, market: FarmerMarket, R):
+    temp_list = []
+    for i in range(len(fermers_list)):
+        if ((fermers_list[i].x - market.x) ** 2 + (fermers_list[i].y - market.y) ** 2) <= R**2:
+            temp_list.append(fermers_list[i])
+    return temp_list
+    
+
+def showAllMarkets(fermers_list: FarmerMarket):
+    for elem in fermers_list:
+        print(elem)
+
+
 db = MySQLdb.connect(host="localhost",    # your host, usually localhost
                      user="root",         # your username
                      passwd="000000",     # your password
@@ -102,14 +136,31 @@ cur = db.cursor()
 # Use all the SQL you like
 cur.execute("SELECT * FROM frms_markets")
 
+# Create table for review authors
+cur.execute("CREATE TABLE IF NOT EXISTS author (authorId INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255) NOT NULL, surname VARCHAR(255) NOT NULL)")
+
+# Create table for reviews
+cur.execute( "CREATE TABLE IF NOT EXISTS reviews (rate TINYINT UNSIGNED NOT NULL, review TEXT, authorId INT NOT NULL, FMID INT UNSIGNED NOT NULL, FOREIGN KEY(authorId) REFERENCES author(authorId), FOREIGN KEY(FMID) REFERENCES frms_markets(FMID) ) ")
+
 frms_list = []
 
 # print all the first cell of all the rows
 for row in cur.fetchall():
     temp = FarmerMarket(row)
     frms_list.append(temp)
-    print(row)
+    # print(row)
 
 db.close()
 
-print(frms_list[5])
+# finded_markets = srchBycityandstate(frms_list, 'Akron', 'Ohio')
+# for elem in finded_markets:
+#     print(elem.main_info())
+
+# print()
+
+# print(finded_markets[0].main_info())
+# near_markets = srchByArea(frms_list, finded_markets[0], 1)
+# for elem in near_markets:
+#     print(elem.main_info())
+
+
