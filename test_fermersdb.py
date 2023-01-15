@@ -152,6 +152,7 @@ for row in cur.fetchall():
 
 db.close()
 
+<<<<<<< HEAD
 # finded_markets = srchBycityandstate(frms_list, 'Akron', 'Ohio')
 # for elem in finded_markets:
 #     print(elem.main_info())
@@ -164,3 +165,8 @@ db.close()
 #     print(elem.main_info())
 
 
+=======
+print(frms_list[5])
+
+# check commit by Ivan
+>>>>>>> 1155f333941a77cb1af0160d69a03c7708213009
