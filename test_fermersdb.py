@@ -9,6 +9,7 @@ class FarmerMarket():
         # Crafts,Flowers,Eggs,Seafood,Herbs,Vegetables,Honey,Jams,Maple,Meat,Nursery,Nuts,Plants,Poultry,\
         # Prepared,Soap,Trees,Wine,Coffee,Beans,Fruits,Grains,Juices,Mushrooms,PetFood,Tofu,WildHarvested,updateTime
 
+        # function for processing farmer's market products
         def preprocess(parametr):
             if parametr == 'Y':
                 return 1
@@ -95,6 +96,47 @@ class FarmerMarket():
 
 
 
+class review():
+
+    def __init__(self, fmid, authid, rate, comment = ""):
+        self.fmid = fmid
+        self.authorid = authid
+        self.rate = rate
+        self.comm = comment
+
+
+    def __str__(self):
+        return f'fmid = {self.fmid}, authorid = {self.authorid}, rate = {self.rate}, comment = {self.comm}'
+
+
+    def add_to_DB(self, cur, db):
+        sql = "INSERT INTO reviews (rate, review, authorId, FMID) VALUES (%s, %s, %s, %s)"
+        val = (self.rate, self.comm, self.authorid, self.fmid)
+        cur.execute(sql, val)
+        db.commit()
+
+
+class user():
+
+    def __init__(self, name, surname):
+        self.name = name
+        self.surname = surname
+
+
+    def add_to_DB(self, cur, db):
+        sql = "INSERT INTO author (name, surname) VALUES (%s, %s)"
+        val = (self.name, self.surname)
+        cur.execute(sql, val)
+        db.commit()
+
+
+    def get_author_id(self, cur):
+        sql = "SELECT a.authorId FROM author a WHERE a.name = %s and a.surname = %s"
+        val = (self.name, self.surname)
+        cur.execute(sql, val)
+        return cur.fetchone()[0]
+
+
 def srchBycityandstate(fermers_list: FarmerMarket, city, state):
     temp_list = []
     for i in range(len(fermers_list)):
@@ -124,6 +166,29 @@ def showAllMarkets(fermers_list: FarmerMarket):
         print(elem)
 
 
+def readAllMarkets(cur):
+    frms_list = []
+
+    cur.execute("SELECT * FROM frms_markets")
+
+    for row in cur.fetchall():
+        temp = FarmerMarket(row)
+        frms_list.append(temp)
+
+    return frms_list
+
+
+def readAllReviews(cur):
+    review_list = []
+
+    cur.execute("SELECT * FROM reviews")
+
+    for row in cur.fetchall():
+        temp = review(row[3], row[2], row[0], row[1])
+        review_list.append(temp)
+
+    return review_list
+
 db = MySQLdb.connect(host="localhost",    # your host, usually localhost
                      user="root",         # your username
                      passwd="000000",     # your password
@@ -133,24 +198,14 @@ db = MySQLdb.connect(host="localhost",    # your host, usually localhost
 #  you execute all the queries you need
 cur = db.cursor()
 
-# Use all the SQL you like
-cur.execute("SELECT * FROM frms_markets")
-
 # Create table for review authors
 cur.execute("CREATE TABLE IF NOT EXISTS author (authorId INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255) NOT NULL, surname VARCHAR(255) NOT NULL)")
 
 # Create table for reviews
-cur.execute( "CREATE TABLE IF NOT EXISTS reviews (rate TINYINT UNSIGNED NOT NULL, review TEXT, authorId INT NOT NULL, FMID INT UNSIGNED NOT NULL, FOREIGN KEY(authorId) REFERENCES author(authorId), FOREIGN KEY(FMID) REFERENCES frms_markets(FMID) ) ")
+cur.execute("CREATE TABLE IF NOT EXISTS reviews (rate TINYINT UNSIGNED NOT NULL, review TEXT, authorId INT NOT NULL, FMID INT UNSIGNED NOT NULL, FOREIGN KEY(authorId) REFERENCES author(authorId), FOREIGN KEY(FMID) REFERENCES frms_markets(FMID) ) ")
 
-frms_list = []
 
-# print all the first cell of all the rows
-for row in cur.fetchall():
-    temp = FarmerMarket(row)
-    frms_list.append(temp)
-    # print(row)
-
-db.close()
+frms_list = readAllMarkets(cur)
 
 # finded_markets = srchBycityandstate(frms_list, 'Akron', 'Ohio')
 # for elem in finded_markets:
@@ -164,6 +219,20 @@ db.close()
 #     print(elem.main_info())
 
 
-print(frms_list[5])
+print(frms_list[5].main_info())
+
+first_user = user("Vladislav", "Anikin")
+second_user= user("Ivan", "Odynets")
+# first_user.add_to_DB(cur, db)
+print()
+
+Plymouth_review = review(frms_list[5].FMID, first_user.get_author_id(cur), 4, "Good market!")
+# Plymouth_review.add_to_DB(cur, db)
+
+review_list = readAllReviews(cur)
+for elem in review_list:
+    print(elem)
+
+db.close()
 
 # check commit by Ivan
