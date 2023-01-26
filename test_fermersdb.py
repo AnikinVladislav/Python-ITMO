@@ -23,9 +23,7 @@ frms_list = model.readAllMarkets(cur)
 # for elem in frms_list:
 #      print(elem.main_info())
 
-model.showAllMarkets(frms_list)
-
-
+# model.showAllMarkets(frms_list)
 
 
 db.close()

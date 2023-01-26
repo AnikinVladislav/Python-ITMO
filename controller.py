@@ -1,7 +1,17 @@
 import model
-
-
 from PyQt5 import QtCore, QtGui, QtWidgets
+import MySQLdb
+
+def getAllMarkets():
+    db = MySQLdb.connect(host="localhost",    # your host, usually localhost
+                        user="root",         # your username
+                        passwd="000000",     # your password
+                        db="farmers")        # name of the data base
+    cur = db.cursor()
+    frms_list = model.readAllMarkets(cur)
+    db.close()
+    return frms_list
+
 
 
 class Ui_MainWindow(object):
@@ -124,6 +134,40 @@ class Ui_MainWindow(object):
         self.stackedWidget.setCurrentIndex(0)
         self.stackedWidget_2.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        self.add_function()
+
+
+    def add_function(self):
+        self.ButtonViewAllMarkets.clicked.connect(lambda: self.ShowAllMarkets())
+
+    def ShowAllMarkets(self):
+        fermMarketList = getAllMarkets()
+        self.MarketTable.setRowCount(len(fermMarketList))
+        self.MarketTable.setColumnCount(len(fermMarketList[0].columnNameMain))
+        self.MarketTable.setHorizontalHeaderLabels(fermMarketList[0].columnNameMain)
+
+        for i in range(len(fermMarketList)):
+            for j in range(len(fermMarketList[0].columnNameMain)):
+                if j == 0:
+                    self.MarketTable.setItem(i,j, QtWidgets.QTableWidgetItem(str(fermMarketList[i].FMID)))
+                elif j == 1:
+                    self.MarketTable.setItem(i,j, QtWidgets.QTableWidgetItem(fermMarketList[i].MarketName))
+                elif j == 2:
+                    self.MarketTable.setItem(i,j, QtWidgets.QTableWidgetItem(fermMarketList[i].city))
+                elif j == 3:
+                    self.MarketTable.setItem(i,j, QtWidgets.QTableWidgetItem(fermMarketList[i].County))
+                elif j == 4:
+                    self.MarketTable.setItem(i,j, QtWidgets.QTableWidgetItem(fermMarketList[i].State))
+                elif j == 5:
+                    self.MarketTable.setItem(i,j, QtWidgets.QTableWidgetItem(str(fermMarketList[i].zip)))
+                elif j == 6:
+                    self.MarketTable.setItem(i,j, QtWidgets.QTableWidgetItem(f"{fermMarketList[i].x:.1f}"))
+                elif j == 7:
+                    self.MarketTable.setItem(i,j, QtWidgets.QTableWidgetItem(f"{fermMarketList[i].y:.1f}"))  
+
+        self.MarketTable.resizeColumnsToContents()
+
+          
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -148,6 +192,9 @@ class Ui_MainWindow(object):
         self.searchByCityState.setText(_translate("MainWindow", "Поиск по городу и штату"))
         self.ButtonViewAllMarkets.setText(_translate("MainWindow", "Просмотреть все рынки"))
         self.ButtonFindMarkets.setText(_translate("MainWindow", "Найти рынки"))
+
+
+
 
 
 if __name__ == "__main__":

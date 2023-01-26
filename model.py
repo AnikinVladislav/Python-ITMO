@@ -1,11 +1,14 @@
 class FarmerMarket():
 
     def __init__(self, data):
-        # FMID,MarketName,Website,Facebook,Twitter,Youtube,OtherMedia,street,city,\
-        # County,State,zip,Season1Date,Season1Time,Season2Date,Season2Time,Season3Date,Season3Time,\
-        # Season4Date,Season4Time,x,y,Location,Credit,WIC,WICcash,SFMNP,SNAP,Organic,Bakedgoods,Cheese,\
-        # Crafts,Flowers,Eggs,Seafood,Herbs,Vegetables,Honey,Jams,Maple,Meat,Nursery,Nuts,Plants,Poultry,\
-        # Prepared,Soap,Trees,Wine,Coffee,Beans,Fruits,Grains,Juices,Mushrooms,PetFood,Tofu,WildHarvested,updateTime
+        
+        self.columnName = ["FMID","MarketName","Website","Facebook","Twitter","Youtube","OtherMedia","street","city","\
+        County","State","zip","Season1Date","Season1Time","Season2Date","Season2Time","Season3Date","Season3Time","\
+        Season4Date","Season4Time","x","y","Location","Credit","WIC","WICcash","SFMNP","SNAP","Organic","Bakedgoods","Cheese","\
+        Crafts","Flowers","Eggs","Seafood","Herbs","Vegetables","Honey","Jams","Maple","Meat","Nursery","Nuts","Plants","Poultry","\
+        Prepared","Soap","Trees","Wine","Coffee","Beans","Fruits","Grains","Juices","Mushrooms","PetFood","Tofu","WildHarvested","updateTime"]
+
+        self.columnNameMain = ["FMID","MarketName","city","County","State","zip","x","y"]
 
         # function for processing farmer's market products
         def preprocess(parametr):
