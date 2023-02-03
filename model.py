@@ -145,10 +145,10 @@ def srchByZip(fermers_list: FarmerMarket, zip):
     return temp_list
 
 
-def srchByArea(fermers_list: FarmerMarket, market: FarmerMarket, R):
+def srchByArea(fermers_list: FarmerMarket, x, y, R):
     temp_list = []
     for i in range(len(fermers_list)):
-        if ((fermers_list[i].x - market.x) ** 2 + (fermers_list[i].y - market.y) ** 2) <= R ** 2:
+        if ((fermers_list[i].x - x) ** 2 + (fermers_list[i].y - y) ** 2) <= R ** 2:
             temp_list.append(fermers_list[i])
     return temp_list
 

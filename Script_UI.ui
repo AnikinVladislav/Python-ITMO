@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +14,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>FarmersMarkets</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
@@ -210,6 +213,9 @@ p, li { white-space: pre-wrap; }
            </item>
            <item row="2" column="1">
             <widget class="QSpinBox" name="valueLimitSearchArea">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -221,6 +227,9 @@ p, li { white-space: pre-wrap; }
                <width>100</width>
                <height>30</height>
               </size>
+             </property>
+             <property name="maximum">
+              <number>999999999</number>
              </property>
             </widget>
            </item>

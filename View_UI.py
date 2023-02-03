@@ -9,6 +9,22 @@ class Ui_FarmerMarkets(Script_UI.Ui_MainWindow):
         super().setupUi(MainWindow)
         self.add_function()
         self.search_function()
+        self.changeSearchPage()
+        self.hideValueLimitSearchArea()
+        self.changeLimitSearchArea()
+
+    def changeSearchPage(self):
+        # self.searchByCityState.isChecked.(lambda: self.SetCurrentIndex())
+        # self.searchByCityState.clicked.connect(lambda: self.SetCurrentIndex())
+        self.searchByCityState.toggled.connect(lambda: self.SetCurrentIndex())
+        self.searchByZip.toggled.connect(lambda: self.SetCurrentIndex())
+
+    def SetCurrentIndex(self):
+        if self.searchByCityState.isChecked():
+            self.stackedWidget_2.setCurrentIndex(0)
+        elif self.searchByZip.isChecked():
+            self.stackedWidget_2.setCurrentIndex(1)
+
     def add_function(self):
         self.ButtonViewAllMarkets.clicked.connect(lambda: self.ShowAllMarkets())
 
@@ -44,11 +60,19 @@ class Ui_FarmerMarkets(Script_UI.Ui_MainWindow):
         else:
             self.MarketTable.clear()
 
+
     def search_function(self):
         self.ButtonFindMarkets.clicked.connect(lambda: self.searchMarkets())
 
     def searchMarkets(self):
         fermMarketList = ETL.getAllMarkets()
+
+        if self.limitSearchArea.isChecked():
+            x = -89.5
+            y = 34.4
+            r = self.valueLimitSearchArea.value()
+            fermMarketList = model.srchByArea(fermMarketList, x, y, r)
+
         if self.searchByCityState.isChecked():
             city = self.inputCity.toPlainText()
             state = self.inputState.toPlainText()
@@ -59,6 +83,14 @@ class Ui_FarmerMarkets(Script_UI.Ui_MainWindow):
             search_list = model.srchByZip(fermMarketList, zip)
             self.ShowMarkets(search_list)
 
+    def changeLimitSearchArea(self):
+        self.limitSearchArea.toggled.connect(lambda: self.hideValueLimitSearchArea())
+
+    def hideValueLimitSearchArea(self):
+        if self.limitSearchArea.isChecked():
+            self.valueLimitSearchArea.show()
+        else:
+            self.valueLimitSearchArea.hide()
 
 
 if __name__ == "__main__":

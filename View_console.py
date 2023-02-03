@@ -37,7 +37,7 @@ while (True):
             model.showAllReviews(review_list)
 
     elif command == '2':
-        command_search = input('По каким параметрам вы хотите найти фермерские рынки:\n 1.По городу и штату\n 2.Почтовый индекс\n 3.На определенном растоянии от рынка\n')
+        command_search = input('По каким параметрам вы хотите найти фермерские рынки:\n 1.По городу и штату\n 2.Почтовый индекс\n 3.На определенном растоянии от вас\n')
 
         if command_search == '1':
             city = input('Введите город:')
@@ -58,10 +58,11 @@ while (True):
                 model.showAllMarkets(search_list)
 
         elif command_search == '3':
-            pass
-            # R = input('Введите расстояние поиска в милях:')
-            # search_list = model.srchByArea(frms_list, market,R)
-            # model.showAllMarkets(search_list)
+            R = int(input('Введите расстояние поиска в милях:'))
+            x = -89.5
+            y = 34.4
+            search_list = model.srchByArea(frms_list, x, y, R)
+            model.showAllMarkets(search_list)
 
         else:
             print('Такого метода поиска нет, выберите метод из предложенных\n')
