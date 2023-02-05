@@ -12,14 +12,17 @@ class Ui_FarmerMarkets(Script_UI.Ui_MainWindow):
         self.changeSearchPage()
         self.hideValueLimitSearchArea()
         self.changeLimitSearchArea()
+        self.chekChangeFmid()
+        self.setEnabledButtonViewWriteReviews()
+        self.clickedButtonButtonViewWriteReviews()
+        self.stackedWidget.setCurrentIndex(0)
 
     def changeSearchPage(self):
         # self.searchByCityState.isChecked.(lambda: self.SetCurrentIndex())
-        # self.searchByCityState.clicked.connect(lambda: self.SetCurrentIndex())
-        self.searchByCityState.toggled.connect(lambda: self.SetCurrentIndex())
-        self.searchByZip.toggled.connect(lambda: self.SetCurrentIndex())
+        self.searchByCityState.toggled.connect(lambda: self.SetCurrentIndexSearchPage())
+        self.searchByZip.toggled.connect(lambda: self.SetCurrentIndexSearchPage())
 
-    def SetCurrentIndex(self):
+    def SetCurrentIndexSearchPage(self):
         if self.searchByCityState.isChecked():
             self.stackedWidget_2.setCurrentIndex(0)
         elif self.searchByZip.isChecked():
@@ -91,6 +94,30 @@ class Ui_FarmerMarkets(Script_UI.Ui_MainWindow):
             self.valueLimitSearchArea.show()
         else:
             self.valueLimitSearchArea.hide()
+
+    def chekChangeFmid(self):
+        self.inputFmid.textChanged.connect(lambda: self.setEnabledButtonViewWriteReviews())
+
+
+    def setEnabledButtonViewWriteReviews(self):
+        try:
+            fmid = int(self.inputFmid.toPlainText())
+        except ValueError:
+            self.ButtonViewWriteReviews.setEnabled(False)
+        else:
+            fermMarketList = ETL.getAllMarkets()
+            if model.chekOccurFmid(fermMarketList, fmid):
+                self.ButtonViewWriteReviews.setEnabled(True)
+                self.selectedFmid = fmid
+            else:
+                self.ButtonViewWriteReviews.setEnabled(False)
+
+    def clickedButtonButtonViewWriteReviews(self):
+        self.ButtonViewWriteReviews.clicked.connect(lambda: self.openReviewPage())
+
+    def openReviewPage(self):
+        self.stackedWidget.setCurrentIndex(1)
+        print(self.selectedFmid)
 
 
 if __name__ == "__main__":
