@@ -144,7 +144,6 @@ def srchByZip(fermers_list: FarmerMarket, zip):
             temp_list.append(fermers_list[i])
     return temp_list
 
-
 def srchByArea(fermers_list: FarmerMarket, x, y, R):
     temp_list = []
     for i in range(len(fermers_list)):
@@ -152,33 +151,23 @@ def srchByArea(fermers_list: FarmerMarket, x, y, R):
             temp_list.append(fermers_list[i])
     return temp_list
 
-def chekOccurFmid(fermers_list: FarmerMarket, fmid):
-    for i in range(len(fermers_list)):
-        if fermers_list[i].FMID == fmid:
-            return True
-    return False
-
 def showAllMarkets(fermers_list: FarmerMarket):
     for elem in fermers_list:
         print(elem.main_info())
-
-
-def readAllMarkets(cur):
-    frms_list = []
-    cur.execute("SELECT * FROM frms_markets")
-    for row in cur.fetchall():
-        temp = FarmerMarket(row)
-        frms_list.append(temp)
-    return frms_list
 
 def showAllReviews(review_list: review):
     for elem in review_list:
         print(elem)
 
-def readAllReviews(cur):
-    review_list = []
-    cur.execute("SELECT * FROM reviews")
-    for row in cur.fetchall():
-        temp = review(row[3], row[2], row[0], row[1])
-        review_list.append(temp)
-    return review_list
+def fermerMarketCheck(fermers_list: FarmerMarket, fmid):
+    for i in range(len(fermers_list)):
+        if fermers_list[i].FMID == fmid:
+            return fermers_list[i]
+    return None
+
+def reviewCheck(review_list: review, fmid):
+    temp_reviews_list = []
+    for i in range(len(review_list)):
+        if review_list[i].fmid == fmid:
+            temp_reviews_list.append(review_list[i])
+    return temp_reviews_list

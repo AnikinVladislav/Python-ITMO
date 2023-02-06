@@ -18,7 +18,7 @@ cur.execute("CREATE TABLE IF NOT EXISTS author (authorId INT AUTO_INCREMENT PRIM
 cur.execute("CREATE TABLE IF NOT EXISTS reviews (rate TINYINT UNSIGNED NOT NULL, review TEXT, authorId INT NOT NULL, FMID INT UNSIGNED NOT NULL, FOREIGN KEY(authorId) REFERENCES author(authorId), FOREIGN KEY(FMID) REFERENCES frms_markets(FMID) ) ")
 
 
-frms_list = model.readAllMarkets(cur)
+# frms_list = model.readAllMarkets(cur)
 
 # for elem in frms_list:
 #      print(elem.main_info())

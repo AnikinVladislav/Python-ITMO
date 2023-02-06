@@ -106,9 +106,9 @@ class Ui_FarmerMarkets(Script_UI.Ui_MainWindow):
             self.ButtonViewWriteReviews.setEnabled(False)
         else:
             fermMarketList = ETL.getAllMarkets()
-            if model.chekOccurFmid(fermMarketList, fmid):
+            self.selectedFermMarket = model.fermerMarketCheck(fermMarketList, fmid)
+            if self.selectedFermMarket != None:
                 self.ButtonViewWriteReviews.setEnabled(True)
-                self.selectedFmid = fmid
             else:
                 self.ButtonViewWriteReviews.setEnabled(False)
 
@@ -117,9 +117,13 @@ class Ui_FarmerMarkets(Script_UI.Ui_MainWindow):
 
     def openReviewPage(self):
         self.stackedWidget.setCurrentIndex(1)
-        print(self.selectedFmid)
+        self.selectedMarketName.setText(self.selectedFermMarket.MarketName)
+        self.selectedMarketCityAndState.setText(f'{self.selectedFermMarket.city},   {self.selectedFermMarket.State}')
+        reviewList = ETL.getAllReviews()
+        selectedReviewList = model.reviewCheck(reviewList, self.selectedFermMarket.FMID)
+        print(selectedReviewList)
 
-
+        
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)

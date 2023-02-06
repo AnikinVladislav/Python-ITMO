@@ -1,25 +1,8 @@
-import MySQLdb
 import model
+import ETL
 
 
-db = MySQLdb.connect(host="localhost",    # your host, usually localhost
-                     user="root",         # your username
-                     passwd="000000",     # your password
-                     db="farmers")        # name of the data base
-
-# you must create a Cursor object. It will let
-#  you execute all the queries you need
-cur = db.cursor()
-
-# Create table for review authors
-cur.execute("CREATE TABLE IF NOT EXISTS author (authorId INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255) NOT NULL, surname VARCHAR(255) NOT NULL)")
-
-# Create table for reviews
-cur.execute("CREATE TABLE IF NOT EXISTS reviews (rate TINYINT UNSIGNED NOT NULL, review TEXT, authorId INT NOT NULL, FMID INT UNSIGNED NOT NULL, FOREIGN KEY(authorId) REFERENCES author(authorId), FOREIGN KEY(FMID) REFERENCES frms_markets(FMID) ) ")
-
-
-
-frms_list = model.readAllMarkets(cur)
+frms_list = ETL.getAllMarkets()
 
 while (True):
 
@@ -30,7 +13,7 @@ while (True):
         model.showAllMarkets(frms_list)
 
         print('\n\nВсе рецензии:')
-        review_list = model.readAllReviews(cur)
+        review_list = ETL.getAllReviews()
         if review_list == []:
             print('Рецензий еще нет\n')
         else:
@@ -75,7 +58,8 @@ while (True):
 
     elif command == '3':
         review_fmid = int(input('Введите fmid интересуещего рынка: '))
-        if model.chekOccurFmid(frms_list, review_fmid):
+        selectedFermMarket = model.fermerMarketCheck(frms_list, review_fmid)
+        if selectedFermMarket != None:
             print('Такой ID существует')
 
             #     review_name = input('Введите свое имя:')
@@ -97,6 +81,3 @@ while (True):
 
     else:
         print('Такой команды нет.')
-
-
-db.close()
