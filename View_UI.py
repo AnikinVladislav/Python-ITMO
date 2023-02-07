@@ -123,7 +123,36 @@ class Ui_FarmerMarkets(Script_UI.Ui_MainWindow):
         selectedReviewList = model.reviewCheck(reviewList, self.selectedFermMarket.FMID)
         print(selectedReviewList)
 
-        
+    # def ShowReviews(self, reviewList):
+    #     if reviewList != []:
+    #         self.ReviewTable.setRowCount(len(reviewList))
+    #         self.ReviewTable.setColumnCount(len(reviewList[0].columnNameMain))
+    #         self.ReviewTable.setHorizontalHeaderLabels(reviewList[0].columnNameMain)
+    #
+    #         for i in range(len(reviewList)):
+    #             for j in range(len(reviewList[0].columnNameMain)):
+    #                 if j == 0:
+    #                     self.ReviewTable.setItem(i, j, QtWidgets.QTableWidgetItem(str(reviewList[i].FMID)))
+    #                 elif j == 1:
+    #                     self.ReviewTable.setItem(i, j, QtWidgets.QTableWidgetItem(reviewList[i].MarketName))
+    #                 elif j == 2:
+    #                     self.ReviewTable.setItem(i, j, QtWidgets.QTableWidgetItem(reviewList[i].city))
+    #                 elif j == 3:
+    #                     self.ReviewTable.setItem(i, j, QtWidgets.QTableWidgetItem(reviewList[i].County))
+    #                 elif j == 4:
+    #                     self.ReviewTable.setItem(i, j, QtWidgets.QTableWidgetItem(reviewList[i].State))
+    #                 elif j == 5:
+    #                     self.ReviewTable.setItem(i, j, QtWidgets.QTableWidgetItem(str(reviewList[i].zip)))
+    #                 elif j == 6:
+    #                     self.ReviewTable.setItem(i, j, QtWidgets.QTableWidgetItem(f"{reviewList[i].x:.1f}"))
+    #                 elif j == 7:
+    #                     self.ReviewTable.setItem(i, j, QtWidgets.QTableWidgetItem(f"{reviewList[i].y:.1f}"))
+    #         self.ReviewTable.resizeColumnsToContents()
+    #     else:
+    #         self.ReviewTable.clear()
+
+
+
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)

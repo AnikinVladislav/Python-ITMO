@@ -40,3 +40,18 @@ def getAllReviews():
         reviews_list.append(temp)
     db.close()
     return reviews_list
+
+# def getAllUsers():
+#     db = MySQLdb.connect(host="localhost",  # your host, usually localhost
+#                          user="root",  # your username
+#                          passwd="000000",  # your password
+#                          db="farmers")  # name of the data base
+#
+#     cur = db.cursor()
+#     users_list = []
+#     cur.execute("SELECT * FROM author")
+#     for row in cur.fetchall():
+#         temp = model.user(row[3], row[2], row[0], row[1])
+#         users_list.append(temp)
+#     db.close()
+#     return users_list

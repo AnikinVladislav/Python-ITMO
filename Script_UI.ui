@@ -589,6 +589,45 @@ p, li { white-space: pre-wrap; }
         <property name="frameShadow">
          <enum>QFrame::Raised</enum>
         </property>
+        <widget class="QPushButton" name="pushButton">
+         <property name="geometry">
+          <rect>
+           <x>730</x>
+           <y>170</y>
+           <width>141</width>
+           <height>61</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>PushButton</string>
+         </property>
+        </widget>
+        <widget class="QPlainTextEdit" name="plainTextEdit">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>90</y>
+           <width>691</width>
+           <height>141</height>
+          </rect>
+         </property>
+         <property name="plainText">
+          <string/>
+         </property>
+        </widget>
+        <widget class="QSpinBox" name="spinBox">
+         <property name="geometry">
+          <rect>
+           <x>660</x>
+           <y>60</y>
+           <width>41</width>
+           <height>22</height>
+          </rect>
+         </property>
+         <property name="maximum">
+          <number>5</number>
+         </property>
+        </widget>
        </widget>
        <widget class="QFrame" name="frame_6">
         <property name="geometry">

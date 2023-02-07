@@ -129,6 +129,8 @@ class user():
         cur.execute(sql, val)
         return cur.fetchone()[0]
 
+    # def get_name_surname(self, cur):
+    #     sql = "SELECT a.authorId FROM a"
 
 def srchBycityandstate(fermers_list: FarmerMarket, city, state):
     temp_list = []
