@@ -1,3 +1,4 @@
+import ETL
 class FarmerMarket():
 
     def __init__(self, data):
@@ -96,6 +97,7 @@ class FarmerMarket():
 class review():
 
     def __init__(self, fmid, authid, rate, comment=""):
+        self.columnNameMain = ["Name", "Surname", "Rate", "Comment"]
         self.fmid = fmid
         self.authorid = authid
         self.rate = rate
@@ -104,12 +106,8 @@ class review():
     def __str__(self):
         return f'fmid = {self.fmid}, authorid = {self.authorid}, rate = {self.rate}, comment = {self.comm}'
 
-    def add_to_DB(self, cur, db):
-        sql = "INSERT INTO reviews (rate, review, authorId, FMID) VALUES (%s, %s, %s, %s)"
-        val = (self.rate, self.comm, self.authorid, self.fmid)
-        cur.execute(sql, val)
-        db.commit()
-
+    def add_to_DB(self):
+        ETL.add_Review(self.rate, self.comm, self.authorid, self.fmid)
 
 class user():
 
@@ -117,20 +115,16 @@ class user():
         self.name = name
         self.surname = surname
 
-    def add_to_DB(self, cur, db):
-        sql = "INSERT INTO author (name, surname) VALUES (%s, %s)"
-        val = (self.name, self.surname)
-        cur.execute(sql, val)
-        db.commit()
+    def add_to_DB(self):
+        ETL.add_User(self.name, self.surname)
 
-    def get_author_id(self, cur):
-        sql = "SELECT a.authorId FROM author a WHERE a.name = %s and a.surname = %s"
-        val = (self.name, self.surname)
-        cur.execute(sql, val)
-        return cur.fetchone()[0]
+    def get_author_id(self):
+        id = ETL.get_User_id(self.name, self.surname)
+        return id
 
-    # def get_name_surname(self, cur):
-    #     sql = "SELECT a.authorId FROM a"
+
+
+
 
 def srchBycityandstate(fermers_list: FarmerMarket, city, state):
     temp_list = []

@@ -1,5 +1,6 @@
 import MySQLdb
 import model
+import ETL
 
 
 db = MySQLdb.connect(host="localhost",    # your host, usually localhost
@@ -17,11 +18,13 @@ cur = db.cursor()
 # Create table for reviews
 # cur.execute("CREATE TABLE IF NOT EXISTS reviews (rate TINYINT UNSIGNED NOT NULL, review TEXT, authorId INT NOT NULL, FMID INT UNSIGNED NOT NULL, FOREIGN KEY(authorId) REFERENCES author(authorId), FOREIGN KEY(FMID) REFERENCES frms_markets(FMID) ) ")
 
-test_user = model.user('Ivan','Ivanov')
-
-id = test_user.get_author_id(cur)
-print(id)
-
-
 db.close()
 
+
+# test_user = model.user('Ivan','Ivanov')
+#
+# id = test_user.get_author_id()
+# print(id)
+
+name = ETL.get_User_Name_Surname('11')
+print(name)

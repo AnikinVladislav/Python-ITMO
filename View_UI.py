@@ -16,6 +16,9 @@ class Ui_FarmerMarkets(Script_UI.Ui_MainWindow):
         self.setEnabledButtonViewWriteReviews()
         self.clickedButtonButtonViewWriteReviews()
         self.stackedWidget.setCurrentIndex(0)
+        self.clickedButtonButtonSaveReview()
+        self.chekChangeNameSurname()
+        self.setEnabledButtonSaveReview()
 
     def changeSearchPage(self):
         # self.searchByCityState.isChecked.(lambda: self.SetCurrentIndex())
@@ -121,35 +124,55 @@ class Ui_FarmerMarkets(Script_UI.Ui_MainWindow):
         self.selectedMarketCityAndState.setText(f'{self.selectedFermMarket.city},   {self.selectedFermMarket.State}')
         reviewList = ETL.getAllReviews()
         selectedReviewList = model.reviewCheck(reviewList, self.selectedFermMarket.FMID)
-        print(selectedReviewList)
+        self.ShowReviews(selectedReviewList)
 
-    # def ShowReviews(self, reviewList):
-    #     if reviewList != []:
-    #         self.ReviewTable.setRowCount(len(reviewList))
-    #         self.ReviewTable.setColumnCount(len(reviewList[0].columnNameMain))
-    #         self.ReviewTable.setHorizontalHeaderLabels(reviewList[0].columnNameMain)
-    #
-    #         for i in range(len(reviewList)):
-    #             for j in range(len(reviewList[0].columnNameMain)):
-    #                 if j == 0:
-    #                     self.ReviewTable.setItem(i, j, QtWidgets.QTableWidgetItem(str(reviewList[i].FMID)))
-    #                 elif j == 1:
-    #                     self.ReviewTable.setItem(i, j, QtWidgets.QTableWidgetItem(reviewList[i].MarketName))
-    #                 elif j == 2:
-    #                     self.ReviewTable.setItem(i, j, QtWidgets.QTableWidgetItem(reviewList[i].city))
-    #                 elif j == 3:
-    #                     self.ReviewTable.setItem(i, j, QtWidgets.QTableWidgetItem(reviewList[i].County))
-    #                 elif j == 4:
-    #                     self.ReviewTable.setItem(i, j, QtWidgets.QTableWidgetItem(reviewList[i].State))
-    #                 elif j == 5:
-    #                     self.ReviewTable.setItem(i, j, QtWidgets.QTableWidgetItem(str(reviewList[i].zip)))
-    #                 elif j == 6:
-    #                     self.ReviewTable.setItem(i, j, QtWidgets.QTableWidgetItem(f"{reviewList[i].x:.1f}"))
-    #                 elif j == 7:
-    #                     self.ReviewTable.setItem(i, j, QtWidgets.QTableWidgetItem(f"{reviewList[i].y:.1f}"))
-    #         self.ReviewTable.resizeColumnsToContents()
-    #     else:
-    #         self.ReviewTable.clear()
+    def ShowReviews(self, reviewList):
+        if reviewList != []:
+            self.ReviewTable.setRowCount(len(reviewList))
+            self.ReviewTable.setColumnCount(len(reviewList[0].columnNameMain))
+            self.ReviewTable.setHorizontalHeaderLabels(reviewList[0].columnNameMain)
+            for i in range(len(reviewList)):
+                name = ETL.get_User_Name_Surname(str(reviewList[i].authorid))
+                for j in range(len(reviewList[0].columnNameMain)):
+                    if j == 0:
+                        self.ReviewTable.setItem(i, j, QtWidgets.QTableWidgetItem(name[0]))
+                    elif j == 1:
+                        self.ReviewTable.setItem(i, j, QtWidgets.QTableWidgetItem(name[1]))
+                    elif j == 2:
+                        self.ReviewTable.setItem(i, j, QtWidgets.QTableWidgetItem(str(reviewList[i].rate)))
+                    elif j == 3:
+                        self.ReviewTable.setItem(i, j, QtWidgets.QTableWidgetItem(reviewList[i].comm))
+            self.ReviewTable.resizeColumnsToContents()
+        else:
+            self.ReviewTable.clear()
+
+
+    def chekChangeNameSurname(self):
+        self.inputName.textChanged.connect(lambda: self.setEnabledButtonSaveReview())
+        self.inputSurname.textChanged.connect(lambda: self.setEnabledButtonSaveReview())
+
+    def setEnabledButtonSaveReview(self):
+        if self.inputName.text() == '' or self.inputSurname.text() == '':
+            self.ButtonSaveReview.setEnabled(False)
+        else:
+            self.ButtonSaveReview.setEnabled(True)
+
+    def clickedButtonButtonSaveReview(self):
+        self.ButtonSaveReview.clicked.connect(lambda: self.saveReview())
+
+    def saveReview(self):
+        name = self.inputName.text()
+        surname = self.inputSurname.text()
+        author = model.user(name, surname)
+        id = author.get_author_id()
+        if id == None:
+            author.add_to_DB()
+            id = author.get_author_id()
+        rate = self.valueRate.value()
+        comment = self.inputComm.toPlainText()
+        review = model.review(self.selectedFermMarket.FMID, id[0],rate,comment)
+        review.add_to_DB()
+        self.stackedWidget.setCurrentIndex(0)
 
 
 
