@@ -26,5 +26,9 @@ db.close()
 # id = test_user.get_author_id()
 # print(id)
 
-name = ETL.get_User_Name_Surname('11')
-print(name)
+# name = ETL.get_User_Name_Surname('11')
+# print(name)
+
+reviews = ETL.getReviewsByFmid('1000368')
+for i in reviews:
+    print(i)

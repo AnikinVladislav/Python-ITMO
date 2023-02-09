@@ -95,7 +95,6 @@ class FarmerMarket():
 
 
 class review():
-
     def __init__(self, fmid, authid, rate, comment=""):
         self.columnNameMain = ["Name", "Surname", "Rate", "Comment"]
         self.fmid = fmid
@@ -109,21 +108,15 @@ class review():
     def add_to_DB(self):
         ETL.add_Review(self.rate, self.comm, self.authorid, self.fmid)
 
-class user():
 
+class user():
     def __init__(self, name, surname):
         self.name = name
         self.surname = surname
 
     def add_to_DB(self):
-        ETL.add_User(self.name, self.surname)
-
-    def get_author_id(self):
-        id = ETL.get_User_id(self.name, self.surname)
+        id = ETL.add_User(self.name, self.surname)
         return id
-
-
-
 
 
 def srchBycityandstate(fermers_list: FarmerMarket, city, state):
@@ -160,10 +153,3 @@ def fermerMarketCheck(fermers_list: FarmerMarket, fmid):
         if fermers_list[i].FMID == fmid:
             return fermers_list[i]
     return None
-
-def reviewCheck(review_list: review, fmid):
-    temp_reviews_list = []
-    for i in range(len(review_list)):
-        if review_list[i].fmid == fmid:
-            temp_reviews_list.append(review_list[i])
-    return temp_reviews_list

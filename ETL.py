@@ -42,6 +42,37 @@ def getAllReviews():
     return reviews_list
 
 
+def getReviewsByFmid(fmid):
+    db = MySQLdb.connect(host="localhost",  # your host, usually localhost
+                         user="root",  # your username
+                         passwd="000000",  # your password
+                         db="farmers")  # name of the data base
+
+    cur = db.cursor()
+    reviews_list = []
+    sql = "SELECT * FROM reviews WHERE FMID = %s"
+    val = (fmid, )
+    cur.execute(sql, val)
+    for row in cur.fetchall():
+        temp = model.review(row[3], row[2], row[0], row[1])
+        reviews_list.append(temp)
+    db.close()
+    return reviews_list
+
+
+def get_User_Name_Surname(id):
+    db = MySQLdb.connect(host="localhost",  # your host, usually localhost
+                         user="root",  # your username
+                         passwd="000000",  # your password
+                         db="farmers")  # name of the data base
+
+    cur = db.cursor()
+    sql = "SELECT a.name, a.surname FROM author a WHERE a.authorId = %s"
+    val = (id,)
+    cur.execute(sql, val)
+    return cur.fetchone()
+
+
 def add_User(name, surname):
     db = MySQLdb.connect(host="localhost",  # your host, usually localhost
                          user="root",  # your username
@@ -49,23 +80,19 @@ def add_User(name, surname):
                          db="farmers")  # name of the data base
 
     cur = db.cursor()
-    sql = "INSERT INTO author (name, surname) VALUES (%s, %s)"
-    val = (name, surname)
-    cur.execute(sql, val)
-    db.commit()
+    for i in range(0,2):
+        sql = "SELECT a.authorId FROM author a WHERE a.name = %s and a.surname = %s"
+        val = (name, surname)
+        cur.execute(sql, val)
+        id = cur.fetchone()
+        if id == None:
+            sql = "INSERT INTO author (name, surname) VALUES (%s, %s)"
+            val = (name, surname)
+            cur.execute(sql, val)
+            db.commit()
     db.close()
+    return id[0]
 
-def get_User_id(name, surname):
-    db = MySQLdb.connect(host="localhost",  # your host, usually localhost
-                         user="root",  # your username
-                         passwd="000000",  # your password
-                         db="farmers")  # name of the data base
-
-    cur = db.cursor()
-    sql = "SELECT a.authorId FROM author a WHERE a.name = %s and a.surname = %s"
-    val = (name, surname)
-    cur.execute(sql, val)
-    return cur.fetchone()
 
 def add_Review(rate, comm, authorid, fmid):
     db = MySQLdb.connect(host="localhost",  # your host, usually localhost
@@ -81,14 +108,3 @@ def add_Review(rate, comm, authorid, fmid):
     db.close()
 
 
-def get_User_Name_Surname(id):
-    db = MySQLdb.connect(host="localhost",  # your host, usually localhost
-                         user="root",  # your username
-                         passwd="000000",  # your password
-                         db="farmers")  # name of the data base
-
-    cur = db.cursor()
-    sql = "SELECT a.name, a.surname FROM author a WHERE a.authorId = %s"
-    val = (id,)
-    cur.execute(sql, val)
-    return cur.fetchone()

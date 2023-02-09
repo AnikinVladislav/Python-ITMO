@@ -7,9 +7,10 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_FarmerMarkets(Script_UI.Ui_MainWindow):
     def setupUi(self, MainWindow):
         super().setupUi(MainWindow)
-        self.add_function()
-        self.search_function()
+        self.clickedButtonButtonViewAllMarkets()
+        self.clickedButtonButtonFindMarkets()
         self.changeSearchPage()
+        self.SetCurrentIndexSearchPage()
         self.hideValueLimitSearchArea()
         self.changeLimitSearchArea()
         self.chekChangeFmid()
@@ -19,9 +20,9 @@ class Ui_FarmerMarkets(Script_UI.Ui_MainWindow):
         self.clickedButtonButtonSaveReview()
         self.chekChangeNameSurname()
         self.setEnabledButtonSaveReview()
+        self.clickedButtonButtonGoToMarketsPage()
 
     def changeSearchPage(self):
-        # self.searchByCityState.isChecked.(lambda: self.SetCurrentIndex())
         self.searchByCityState.toggled.connect(lambda: self.SetCurrentIndexSearchPage())
         self.searchByZip.toggled.connect(lambda: self.SetCurrentIndexSearchPage())
 
@@ -31,7 +32,7 @@ class Ui_FarmerMarkets(Script_UI.Ui_MainWindow):
         elif self.searchByZip.isChecked():
             self.stackedWidget_2.setCurrentIndex(1)
 
-    def add_function(self):
+    def clickedButtonButtonViewAllMarkets(self):
         self.ButtonViewAllMarkets.clicked.connect(lambda: self.ShowAllMarkets())
 
     def ShowAllMarkets(self):
@@ -66,8 +67,7 @@ class Ui_FarmerMarkets(Script_UI.Ui_MainWindow):
         else:
             self.MarketTable.clear()
 
-
-    def search_function(self):
+    def clickedButtonButtonFindMarkets(self):
         self.ButtonFindMarkets.clicked.connect(lambda: self.searchMarkets())
 
     def searchMarkets(self):
@@ -101,7 +101,6 @@ class Ui_FarmerMarkets(Script_UI.Ui_MainWindow):
     def chekChangeFmid(self):
         self.inputFmid.textChanged.connect(lambda: self.setEnabledButtonViewWriteReviews())
 
-
     def setEnabledButtonViewWriteReviews(self):
         try:
             fmid = int(self.inputFmid.toPlainText())
@@ -122,8 +121,7 @@ class Ui_FarmerMarkets(Script_UI.Ui_MainWindow):
         self.stackedWidget.setCurrentIndex(1)
         self.selectedMarketName.setText(self.selectedFermMarket.MarketName)
         self.selectedMarketCityAndState.setText(f'{self.selectedFermMarket.city},   {self.selectedFermMarket.State}')
-        reviewList = ETL.getAllReviews()
-        selectedReviewList = model.reviewCheck(reviewList, self.selectedFermMarket.FMID)
+        selectedReviewList = ETL.getReviewsByFmid(str(self.selectedFermMarket.FMID))
         self.ShowReviews(selectedReviewList)
 
     def ShowReviews(self, reviewList):
@@ -146,7 +144,6 @@ class Ui_FarmerMarkets(Script_UI.Ui_MainWindow):
         else:
             self.ReviewTable.clear()
 
-
     def chekChangeNameSurname(self):
         self.inputName.textChanged.connect(lambda: self.setEnabledButtonSaveReview())
         self.inputSurname.textChanged.connect(lambda: self.setEnabledButtonSaveReview())
@@ -164,14 +161,18 @@ class Ui_FarmerMarkets(Script_UI.Ui_MainWindow):
         name = self.inputName.text()
         surname = self.inputSurname.text()
         author = model.user(name, surname)
-        id = author.get_author_id()
-        if id == None:
-            author.add_to_DB()
-            id = author.get_author_id()
+        id = author.add_to_DB()
         rate = self.valueRate.value()
-        comment = self.inputComm.toPlainText()
-        review = model.review(self.selectedFermMarket.FMID, id[0],rate,comment)
+        comment = self.inputComm.toPlainText().replace('\n', ' ')
+        review = model.review(self.selectedFermMarket.FMID, id, rate, comment)
         review.add_to_DB()
+        selectedReviewList = ETL.getReviewsByFmid(str(self.selectedFermMarket.FMID))
+        self.ShowReviews(selectedReviewList)
+
+    def clickedButtonButtonGoToMarketsPage(self):
+        self.ButtonGoToMarketsPage.clicked.connect(lambda: self.openMarketsPage())
+
+    def openMarketsPage(self):
         self.stackedWidget.setCurrentIndex(0)
 
 
